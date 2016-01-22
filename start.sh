@@ -7,12 +7,18 @@ AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:?"env variable is required"}
 AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:?"env variable is required"}
 MONGO_HOST=${MONGO_PORT_27017_TCP_ADDR:?"env variable is required"}
 MONGO_PORT=${MONGO_PORT_27017_TCP_PORT:?"env variable is required"}
-MONGO_USERNAME=${MONGO_USERNAME:?"env variable is required"}
-MONGO_PASSWORD=${MONGO_PASSWORD:?"env variable is required"}
 S3_BUCKET=${S3_BUCKET:?"env variable is required"}
 BACKUP_FILENAME_PREFIX=${BACKUP_FILENAME_PREFIX:-mongo_backup}
 BACKUP_FILENAME_DATE_FORMAT=${BACKUP_FILENAME_DATE_FORMAT:-%Y%m%d}
 "
+if [ "${MONGO_USERNAME}" ]; then
+	CRON_ENVIRONMENT+="MONGO_USERNAME=$MONGO_USERNAME
+";
+fi
+if [ "${MONGO_PASSWORD}" ]; then
+	CRON_ENVIRONMENT+="MONGO_PASSWORD=$MONGO_PASSWORD
+";
+fi
 CRON_COMMAND="/script/backup.sh 1>/var/log/backup_script.log 2>&1"
 
 echo
